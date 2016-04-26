@@ -1,0 +1,79 @@
+<class
+    name = "eiratech_protocol"
+    signature = "0"
+    title = "eiratech integration protocol"
+    script = "eiratech_codec_node"
+    package_dir = "../include"
+    source_dir = "."
+    >
+This is an protocol designed to integrate with EiraTech system.
+
+<define name = "version" value = "1" />
+
+Representation of product in EiraTech system.
+<type name = "Product">
+    <field name = "sku" type = "string" required = "true">Stock keeping unit</field>
+    <field name = "barcode" type = "string" required = "true">String representation of product unique identifier e.g. barcode</field>
+    <field name = "weight" type = "number" size = "4">Weight in kg</field>
+    <field name = "bbd" type = "date">Best before date></field>
+    <field name = "description" type = "longstr">Short description helping to identify the product</field>
+    <field name = "image" type = "chunk">Product image</field>
+</type>
+
+<type name = "Line">
+    <field name = "sequence" type = "number" size = "4"></field>
+    <field name = "products" type = "list">
+        <item>
+            <field name = "product" type = "Product">Product type</field>
+            <field name = "quantity" type = "number" size = "4">Quantity</field>
+        </item>
+    </field>
+</type>
+
+Message that represents products to be delivered and stored in EiraTech operated warehouse.
+WMS --> EiraTech
+<message name = "StoreOrder" id = "1" >
+    <field name = "order_id" type = "uuid"></field>
+    <field name = "lines" type = "list">
+        <item>
+            <field name = "line" type = "Line"></field>
+        </item>
+    </field>
+</message>
+
+Message that represents response to StoreOrder message.
+WMS <-- EiraTech
+<message name = "StoreOrderReply" id = "2" >
+    <field name = "order_id" type = "uuid"></field>
+    <field name = "lines" type = "list">
+        <item>
+            <field name = "line" type = "Line"></field>
+            <field name = "status" type = "StoreOrderStatus"></field>
+        </item>
+    </field>
+</message>
+
+Message that represents products to be picked from EiraTech operated warehouse.
+WMS --> EiraTech
+<message name = "PickOrder" id = "3" >
+    <field name = "order_id" type = "uuid"></field>
+    <field name = "lines" type = "list">
+        <item>
+            <field name = "line" type = "Line"></field>
+        </item>
+    </field>
+</message>
+
+Message that represents response to PickOrder message.
+WMS <-- EiraTech
+<message name = "PickOrderReply" id = "4" >
+    <field name = "order_id" type = "uuid"></field>
+    <field name = "lines" type = "list">
+        <item>
+            <field name = "line" type = "Line"></field>
+            <field name = "status" type = "PickOrderStatus"></field>
+        </item>
+    </field>
+</message>
+
+</class>
